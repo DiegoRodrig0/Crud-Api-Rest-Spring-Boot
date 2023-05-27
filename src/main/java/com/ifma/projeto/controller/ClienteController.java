@@ -33,7 +33,7 @@ public class ClienteController {
         return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
 
-    @GetMapping("/listar/{xid}")
+    @GetMapping("/listar/{id}")
     public ResponseEntity<Optional<Cliente>> buscarPor(@PathVariable Integer id) {
         Optional<Cliente> cliente = clienteRepository.findById(id);
 
