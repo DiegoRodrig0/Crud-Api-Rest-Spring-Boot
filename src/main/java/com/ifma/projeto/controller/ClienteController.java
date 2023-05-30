@@ -3,7 +3,6 @@ package com.ifma.projeto.controller;
 import com.ifma.projeto.model.Cliente;
 import com.ifma.projeto.repository.ClienteRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,10 +36,33 @@ public class ClienteController {
     public ResponseEntity<Optional<Cliente>> buscarPor(@PathVariable Integer id) {
         Optional<Cliente> cliente = clienteRepository.findById(id);
 
-        if(cliente.isPresent()) {
+        if (cliente.isPresent()) {
             return new ResponseEntity<Optional<Cliente>>(cliente, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<Optional<Cliente>> deletarPor(@PathVariable Integer id) {
+        Optional<Cliente> cliente = clienteRepository.findById(id);
+
+        if(cliente.isPresent()) {
+            clienteRepository.deleteById(id);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/atualizar/{id}")
+    public ResponseEntity<Cliente> atualizarPor(@PathVariable Integer id, @RequestBody Cliente atualizarCliente) {
+        if(!clienteRepository.existsById(id)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else {
+            atualizarCliente.setId(id);
+            Cliente clienteAtualizado = clienteRepository.save(atualizarCliente);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 }
